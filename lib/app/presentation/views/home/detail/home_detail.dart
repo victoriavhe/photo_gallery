@@ -18,12 +18,11 @@ class _HomeContentState extends State<HomeDetail> {
   final _imageRowCount = 3;
   final _scrollController = ScrollController();
   final _gridKey = GlobalKey();
+  final _shimmerKey = GlobalKey();
 
   HomeBloc get _homeBloc => context.read<HomeBloc>();
 
   bool get _isHomeLoaded => _homeBloc.state.status == HomeStatus.loaded;
-
-  bool get _isFirstPages => _homeBloc.state.currentPage <= _imageRowCount-1;
 
   @override
   void initState() {
@@ -55,7 +54,9 @@ class _HomeContentState extends State<HomeDetail> {
         itemCount: hasReachEnd ? list.length : list.length + 1,
         itemBuilder: (context, int i) {
           if (i >= list.length) {
-            return !hasReachEnd ? AppShimmer() : const Spacer();
+            return !hasReachEnd ? AppShimmer(
+              key: _shimmerKey,
+            ) : const Spacer();
           }
           final e = list[i];
           return PhotoItem(
@@ -94,12 +95,25 @@ class _HomeContentState extends State<HomeDetail> {
     if (_hasReachedEnd) _homeBloc.add(FetchPhotosEvent());
   }
 
-  bool get _listNotCoveredScreen {
+  bool get _isListCoveredScreen {
     final keyContext = _gridKey.currentContext;
-    final height = MediaQuery.of(context).size.height;
+    final shimmerCtx = _shimmerKey.currentContext;
+    final height = MediaQuery.of(context).size.height*.8;
+    final heightY = MediaQuery.of(context).size.height*.85;
+    final width = MediaQuery.of(context).size.width *.8;
+
     if (keyContext != null) {
+      double posX = MediaQuery.of(context).size.width;
+      double posY = MediaQuery.of(context).size.height;
       final box = keyContext.findRenderObject() as RenderBox;
-      return (box.size.height < height);
+      late final RenderBox shimmerBox;
+
+      if (shimmerCtx != null) {
+        shimmerBox = shimmerCtx.findRenderObject() as RenderBox;
+        posX = shimmerBox.localToGlobal(Offset.zero).dx;
+        posY = shimmerBox.localToGlobal(Offset.zero).dy;
+      }
+      return (box.size.height > height && (posY >= heightY || posX >= width));
     }
     return false;
   }
@@ -111,18 +125,17 @@ class _HomeContentState extends State<HomeDetail> {
     return currentPosition == maxScroll;
   }
 
-  /// This functions will be called if a list has not covered an entire screen
-  /// So that it will continue fetching the list.
-  /// Once the screen has been covered by a list and [_listNotCoveredScreen]
-  /// returns false, this function will not be called.
+  /// This functions will continue fetching the list if the list has not
+  /// covered the screen's height.
+  /// Once the screen has been covered by a list and [_isListCoveredScreen]
+  /// returns true, this function will halt fetching photos.
   ///
   /// The default [_onScroll] will activate the pagination by calling other
   /// pages.
-  ///
-  /// Need more adjustment to be more dynamic
   void _onGetInitialList() {
-    bool shouldLoad = (_listNotCoveredScreen && _isHomeLoaded && _isFirstPages);
-    if (!shouldLoad) return;
+    if (!_isHomeLoaded) return;
+
+    if (_isListCoveredScreen) return;
     _homeBloc.add(FetchPhotosEvent());
   }
 }
