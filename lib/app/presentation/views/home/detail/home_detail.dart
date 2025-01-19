@@ -15,7 +15,7 @@ class HomeDetail extends StatefulWidget {
 
 class _HomeContentState extends State<HomeDetail> {
   /// Change this value to change thumbnails horizontal count.
-  final _imageRowCount = 6;
+  final _imageRowCount = 3;
   final _scrollController = ScrollController();
   final _gridKey = GlobalKey();
 
