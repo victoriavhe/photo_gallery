@@ -29,7 +29,7 @@ You can contact me to help you further with it. send me email here mailto:victor
 ## Miscellaneous
 
 Here are some things you can play around with the app:
-- You can change the thumbnails axis count by changing Grid axis count value inside `home_detail.dart`
+- You can change the thumbnails axis count by changing `_imageRowCount` value inside `home_detail.dart`
   I know it's not yet dynamic **sigh* but we can get there!
 - Check app's responsiveness using `DevicePreview` by enabling it through `main.dart`
   Add `enabled: !kReleaseMode,` to run it on debug mode.
