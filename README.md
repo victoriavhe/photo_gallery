@@ -1,16 +1,27 @@
-# photo_gallery
+# Photo Gallery
 
-A new Flutter project.
+A Photo Gallery App built using Unsplash public API.
+You can join as developer and build your own app through [Unsplash Developers] (https://unsplash.com/developers)
 
-## Getting Started
+## How to Run the app
 
-This project is a starting point for a Flutter application.
+- Create your own project on Unsplash
+- Once you acquire an access key, create .env on the project level file and put the access key inside
+  This is how it will look like:
+    ![img.png](img.png)
+- The value of .env file will be: `ACCESS_KEY` = `YOUR_KEY`
+- Run `flutter pub get` 
+- Run the app. 
 
-A few resources to get you started if this is your first Flutter project:
+### OR
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+You can contact me to help you further with it. [send me email] (mailto:victoriave.work@gmail.com)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Miscellaneous
+
+Here are some things you can play around with the app:
+- You can change the thumbnails axis count by changing Grid axis count value inside [HomeDetailPage]
+  I know it's not yet dynamic **sigh* but we can get there!
+- Check app's responsiveness using DevicePreview by enabling it through [main.dart]
+  Add `enabled: !kReleaseMode,` to run it on debug mode.
+  And then you can select which kind of device's view you want to see!
